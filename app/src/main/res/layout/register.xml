@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/mainlay"
+    android:layout_height="match_parent"
+    android:background="#009B77"
+    android:padding="16dp">
+
+
+       <RelativeLayout
+           android:id="@+id/toplinear"
+           android:background="@color/fui_transparent"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/textView"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:background="@color/fui_transparent"
+               android:text="RegisterForm"
+               android:textColor="@color/white"
+               android:textSize="22sp"
+               android:textStyle="bold" />
+
+           <ImageView
+               android:id="@+id/imageView"
+               android:layout_width="150dp"
+               android:layout_height="150dp"
+               android:layout_below="@+id/textView"
+               android:layout_alignParentRight="true"
+               android:layout_centerInParent="true"
+               android:layout_marginBottom="60dp"
+               android:background="@color/fui_transparent"
+               android:src="@drawable/lv" />
+
+           <Spinner
+               android:id="@+id/spinner"
+               android:layout_width="150dp"
+               android:layout_height="160dp"
+               android:layout_below="@+id/textView"
+               android:layout_margin="2dp"
+               android:layout_toLeftOf="@+id/imageView"
+               android:spinnerMode="dropdown" />
+
+           <ImageView
+               android:layout_below="@id/spinner"
+               android:layout_centerInParent="true"
+               android:id="@+id/main"
+               android:layout_width="wrap_content"
+               android:background="@color/fui_transparent"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center_horizontal"
+               android:src="@drawable/ob"
+
+               />
+
+       </RelativeLayout>
+
+
+
+
+<LinearLayout
+    android:visibility="gone"
+    android:background="@color/fui_transparent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_below="@+id/toplinear"
+    android:id="@+id/middle"
+    android:layout_height="wrap_content">
+
+
+
+
+        <include layout="@layout/owner"
+            android:id="@+id/own"
+            android:visibility="gone"
+            />
+    <include layout="@layout/driver"
+        android:id="@+id/driv"
+        android:visibility="gone"
+        />
+    <include layout="@layout/enduser"
+        android:id="@+id/enduse"
+        android:visibility="gone"
+        />
+
+
+
+</LinearLayout>
+
+
+</RelativeLayout>

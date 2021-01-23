@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="Your Previous Travels"
+        android:icon="@drawable/ic_baseline_directions_car_24"
+        app:showAsAction="ifRoom"
+        android:onClick="prevtravel"
+        android:id="@+id/prevtravel"
+        />
+
+
+
+    <item
+        android:title="Book my Travel"
+        android:icon="@drawable/ic_baseline_book_online_24"
+        app:showAsAction="ifRoom"
+        android:onClick="bookmytravel"
+        android:id="@+id/booktrave"
+        />
+    <item
+        android:title="Update Profile"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        app:showAsAction="ifRoom"
+        android:onClick="upprofile"
+        android:id="@+id/endprofupdate"
+        />
+
+    <item
+        android:title="LogOut"
+        android:onClick="logouti"
+        android:icon="@drawable/ic_baseline_login_24"
+        app:showAsAction="ifRoom"
+        android:id="@+id/logout"
+        />
+
+
+
+
+
+</menu>

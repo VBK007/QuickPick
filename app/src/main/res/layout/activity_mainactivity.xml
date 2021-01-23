@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fec2"
+    tools:context=".mainactivity">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="40dp"
+        android:background="#fec2"
+        android:src="@drawable/logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:layout_below="@+id/imageView"
+        android:orientation="vertical"
+        android:background="#fec2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_below="@+id/imageView"
+            android:gravity="center_horizontal"
+            android:id="@+id/toptext"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:background="#fec2"
+            android:paddingLeft="40dp"
+            android:fontFamily="cursive"
+            android:text="Rend Anything You want"
+            android:textColor="@android:color/white"
+            android:textFontWeight="1"
+            android:textSize="32sp"
+            tools:layout_editor_absoluteX="90dp"
+            tools:layout_editor_absoluteY="671dp" />
+
+        <RelativeLayout
+            android:background="#fec2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:background="#fec2"
+                android:layout_alignParentRight="true"
+                android:id="@+id/botomtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:fontFamily="@font/akronim"
+                android:text="From Codeplays"
+                android:textColor="@android:color/white"
+                android:textFontWeight="1"
+                android:textSize="16sp"
+                tools:layout_editor_absoluteX="297dp"
+                tools:layout_editor_absoluteY="734dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
