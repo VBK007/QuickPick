@@ -11,6 +11,9 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.example.quickpick.EndUserLayouts.HomeENdUser
+import com.example.quickpick.HomeLayoutforDrivers.homefordriandowner
+import com.example.quickpick.Model.QuickpickdataModel
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
@@ -28,32 +31,29 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var imageView:ImageView=findViewById(R.id.imageView);
-        var textView:TextView=findViewById(R.id.toptext);
-        var bootomtext:TextView=findViewById(R.id.botomtext)
+        var imageView: ImageView = findViewById(R.id.imageView);
+        var textView: TextView = findViewById(R.id.toptext);
+        var bootomtext: TextView = findViewById(R.id.botomtext)
 
-        var topanimation:Animation=AnimationUtils.loadAnimation(this,R.anim.top_animation)
-        var bottomanm:Animation=AnimationUtils.loadAnimation(this,R.anim.bottomanim)
+        var topanimation: Animation = AnimationUtils.loadAnimation(this, R.anim.top_animation)
+        var bottomanm: Animation = AnimationUtils.loadAnimation(this, R.anim.bottomanim)
 
-        imageView.animation=topanimation
-        textView.animation=bottomanm
-        bootomtext.animation=bottomanm
+        imageView.animation = topanimation
+        textView.animation = bottomanm
+        bootomtext.animation = bottomanm
         //inti()
-Handler().postDelayed({
-    startActivity(Intent(this, mainactivity::class.java))
-    finish()
-},3000)
-
-    }
-
-
-
-
-
-
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        val database = FirebaseDatabase.getInstance().reference.child(Commmon.DRIVER_INFO_REFERENCE)
+        Handler().postDelayed({
+            startActivity(Intent(this@MainActivity, mainactivity::class.java))
+            finish()
+        }, 3000)
 
 
     }
+
+
+}
 
 
 
