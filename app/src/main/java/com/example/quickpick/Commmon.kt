@@ -11,10 +11,14 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.example.quickpick.Model.DriverModel
 import com.example.quickpick.Model.QuickpickdataModel
+import com.google.android.gms.maps.model.Marker
 
 object Commmon {
 
+    val markerlist:MutableMap<String,Marker> =HashMap<String,Marker>()
+    val driverfound: MutableSet<DriverModel> =HashSet<DriverModel>()
     val TOKEN_REFERENCE: String="Token"
     var currentuser: QuickpickdataModel?=null
      var DRIVER_INFO_REFERENCE:String="Qucikowner";
@@ -60,6 +64,14 @@ object Commmon {
 
 
         }
+
+
+    }
+
+    fun buildname(username: String): String? {
+
+        return java.lang.StringBuilder(username).toString()
+
 
 
     }

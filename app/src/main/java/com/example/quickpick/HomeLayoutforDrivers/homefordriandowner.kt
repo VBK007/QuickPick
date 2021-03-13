@@ -41,7 +41,7 @@ class homefordriandowner : AppCompatActivity() {
 
 
         if (savedInstanceState==null){
-            val fragent= homefragenduser()
+            val fragent= homefragfordrivers()
             supportFragmentManager.beginTransaction().replace(R.id.frame,fragent,fragent.javaClass.simpleName).commit()
         }
 

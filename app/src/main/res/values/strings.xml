@@ -3,4 +3,6 @@
     <string name="navigation_drawer_open">\"OPEN\"</string>
     <string name="navigation_drawer_close">\"CLOSE\"</string>
     <string name="title_activity_maps">Map</string>
+    <string name="permission_equire">Permission Location requires</string>
+    <string name="driver_notfound">Driver not found</string>
 </resources>
