@@ -1,3 +1,4 @@
+
 package com.example.quickpick.EndUserLayouts.Fragment
 
 import android.content.pm.PackageManager
@@ -451,7 +452,7 @@ p1!!.continuePermissionRequest()
                         .flat(true)
                         .title(Commmon.buildname(driverModel.driverInfoModel!!.username))
                         .snippet(driverModel.driverInfoModel!!.phonenumber)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.cae))
 
 
                 )
