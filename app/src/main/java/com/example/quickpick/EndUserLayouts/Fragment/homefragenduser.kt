@@ -1,9 +1,7 @@
 package com.example.quickpick.EndUserLayouts.Fragment
 
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.database.Observable
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -47,12 +45,10 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.*
-import java.util.jar.Manifest
 import kotlin.collections.ArrayList
 
 class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListener {
@@ -100,9 +96,19 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
         Dexter.withContext(requireContext())
             .withPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
             .withListener(object : PermissionListener {
-                @SuppressLint("MissingPermission")
                 override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
 
+                    if (ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            android.Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                        return
+                    }
                     mMap.isMyLocationEnabled = true
                     mMap.uiSettings.isMyLocationButtonEnabled = true
                     mMap.setOnMyLocationClickListener {
@@ -150,7 +156,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                     p0: PermissionRequest?,
                     p1: PermissionToken?
                 ) {
-
+p1!!.continuePermissionRequest()
                 }
 
             }).check()
@@ -324,11 +330,13 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
 
                             val geoLocation =
                                 GeoLocation(geoQuerymodel!!.l!![0], geoQuerymodel!!.l!![1])
+
                             val drivergeomodel = DriverModel(snapshot.key, geoLocation)
                             val newDriverlocation = Location("")
                             newDriverlocation.latitude = geoLocation.latitude
                             newDriverlocation.longitude = geoLocation.longitude
                             val newdistance = location.distanceTo(newDriverlocation) / 1000
+
                             if (newdistance <= LIMIT_RANGE) {
                                 finduserbykey(drivergeomodel)
                             }
@@ -381,7 +389,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
     }
 
 
-    private fun finduserbykey(drivergeomodel: DriverModel) {
+    private fun finduserbykey(drivergeomodel: DriverModel?) {
         FirebaseDatabase.getInstance().getReference(Commmon.DRIVER_INFO_REFERENCE)
             .child(drivergeomodel!!.key!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -391,6 +399,11 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                             (snapshot.getValue(QuickpickdataModel::class.java))
                         isFirebaseDriverInfoListener.onDriverInfoloadedSucess(drivergeomodel)
                     }
+                    else{
+                        isFirebaseFailedListyener.onFirebaseFaiiled(getString(R.string.key_not_found)+drivergeomodel.key)
+                    }
+
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -407,7 +420,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { drivermodel: DriverModel ->
+                    { drivermodel: DriverModel? ->
                         finduserbykey(drivermodel)
 
                     }, { t: Throwable? ->
@@ -425,14 +438,14 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
     override fun onDriverInfoloadedSucess(driverModel: DriverModel?) {
         if (!Commmon.markerlist.containsKey(driverModel!!.key))
             Commmon.markerlist.put(
-                driverModel!!.key!!,
+                driverModel.key!!,
 
                 mMap.addMarker(
                     MarkerOptions()
                         .position(
                             LatLng(
-                                driverModel!!.geolocation!!.latitude,
-                                driverModel!!.geolocation!!.longitude
+                                driverModel.geolocation!!.latitude,
+                                driverModel.geolocation!!.longitude
                             )
                         )
                         .flat(true)
@@ -452,7 +465,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                 .child(driverModel!!.key!!)
             driverlocation.addValueEventListener(object :ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-                   if (snapshot.hasChildren()){
+                   if (!snapshot.hasChildren()){
                        if (Commmon.markerlist.get(driverModel!!.key!!)!=null){
                            val marker=Commmon.markerlist.get(driverModel!!.key!!)
                            marker!!.remove()

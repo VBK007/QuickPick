@@ -37,7 +37,9 @@
         <activity
             android:name=".HomeLayoutforDrivers.homefordriandowner"
             android:theme="@style/Mytheme2" />
-        <activity android:name=".EndUserLayouts.HomeENdUser" />
+        <activity android:name=".EndUserLayouts.HomeENdUser"
+            android:theme="@style/Mytheme2"
+            />
         <activity
             android:name=".loginactivity"
             android:theme="@style/Mytheme2" />
