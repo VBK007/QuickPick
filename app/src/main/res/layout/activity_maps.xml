@@ -1,9 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Maps.MapsActivity" />
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Maps.MapsActivity" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_decline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/Decline"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:chipBackgroundColor="@color/black"
+        app:chipIcon="@drawable/quantum_ic_clear_grey600_24"
+        app:chipIconTint="@color/white" />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/layout_accept"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:fontFamily="@font/uber_move_bold"
+                    android:text="QuickPick"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:id="@+id/txt_type_uber"
+                    />
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="false"
+    android:gravity="center"
+    >
+
+
+    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/circularProgress"
+        app:cpb_background_progressbar_color="@color/white"
+        app:cpb_background_progressbar_width="3dp"
+        app:cpb_progress="0"
+        app:cpb_progress_direction="to_right"
+        app:cpb_progress_max="100"
+        app:cpb_progressbar_color="@color/progress_bar_color"
+        app:cpb_progressbar_width="3dp"
+        app:cpb_round_border="false"
+
+        />
+
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:clickable="false"
+        android:layout_centerInParent="true"
+        android:src="@drawable/p"
+
+        />
+
+
+
+
+
+
+</RelativeLayout>
+
+
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:drawableRight="@drawable/ic_baseline_stars_24"
+                    android:fontFamily="@font/uber_move_bold"
+                    android:text="4.25"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:id="@+id/txt_rating"
+                    />
+
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_estimate_time"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/uber_move_bold"
+                android:text="2min"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_estimate_distance"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/uber_move_bold"
+                android:text="4KM"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                />
+
+
+
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</FrameLayout>

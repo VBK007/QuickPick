@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:id="@+id/nav_view"
         android:layout_gravity="start"
+        app:menu="@menu/topmenus"
         app:headerLayout="@layout/upperenduser"
         android:layout_height="match_parent"/>
 
@@ -33,7 +34,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/frame"
-    android:layout_above="@+id/menus"
     android:layout_below="@+id/toolbar"
     />
 
@@ -41,16 +41,16 @@
 
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/menus"
-        android:layout_alignParentBottom="true"
-        app:menu="@menu/topmenus"
-        app:labelVisibilityMode="unlabeled"
-        android:background="#fff"
-        app:itemIconTint="@color/black"
-        />
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/menus"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        app:menu="@menu/topmenus"-->
+<!--        app:labelVisibilityMode="unlabeled"-->
+<!--        android:background="#fff"-->
+<!--        app:itemIconTint="@color/black"-->
+<!--        />-->
 
 </RelativeLayout>
 

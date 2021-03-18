@@ -6,4 +6,16 @@
     <string name="permission_equire">Permission Location requires</string>
     <string name="driver_notfound">Driver not found</string>
     <string name="key_not_found">Key_not_found</string>
+    <string name="welcome">welcome</string>
+    <string name="choose_a_saved_place">choose_a_saved_place</string>
+    <string name="cit_name_not_found">City Not Founded</string>
+    <string name="title_activity_request_driveractivity">Map</string>
+    <string name="pay_by_case">pay_by_case</string>
+    <string name="confirm_uber">confirm_uber</string>
+    <string name="confirm_pickup_spot">confirm_pickup_spot</string>
+    <string name="address_demo">address_demo</string>
+    <string name="confirm_pickup">confirm_pickup</string>
+    <string name="finding_your_route">finding_your_route</string>
+    <string name="send_request_driver_found">Driver Not Found</string>
+    <string name="Decline">decline</string>
 </resources>

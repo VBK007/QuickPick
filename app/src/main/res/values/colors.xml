@@ -18,4 +18,7 @@
     <color name="corlo">#FF6F61</color>
     <color name="viole">#6B5B95</color>
     <color name="honeysuckl">#D65076</color>
+    <color name="uber_color">#2c6ff2</color>
+    <color name="mapdarker">#66333333</color>
+    <color name="progress_bar_color">#151828</color>
 </resources>
