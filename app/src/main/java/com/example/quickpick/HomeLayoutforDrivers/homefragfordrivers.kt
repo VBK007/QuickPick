@@ -109,9 +109,9 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
 
         locatiomRequest = LocationRequest()
         locatiomRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        locatiomRequest.setFastestInterval(3000)
-        locatiomRequest.interval = 5000
-        locatiomRequest.setSmallestDisplacement(10f)
+        locatiomRequest.setFastestInterval(15000)
+        locatiomRequest.interval = 10000
+        locatiomRequest.setSmallestDisplacement(50f)
 
 
 
@@ -160,11 +160,7 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
                             ).show()
 
                         } else {
-                            Snackbar.make(
-                                mapFragment.requireView(),
-                                "You're online!",
-                                Snackbar.LENGTH_SHORT
-                            ).show()
+
                         }
 
 
@@ -293,6 +289,13 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
         } catch (e: Resources.NotFoundException) {
             e.message?.let { Log.e("EDMT_ERROR", it) }
         }
+
+
+        Snackbar.make(
+            mapFragment.requireView(),
+            "You're online!",
+            Snackbar.LENGTH_SHORT
+        ).show()
 
 
     }

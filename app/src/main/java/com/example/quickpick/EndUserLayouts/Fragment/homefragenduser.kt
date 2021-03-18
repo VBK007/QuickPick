@@ -1,18 +1,20 @@
-
 package com.example.quickpick.EndUserLayouts.Fragment
 
+import android.animation.ValueAnimator
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -21,10 +23,13 @@ import com.example.quickpick.Callback.FirebaseDriverInfoListener
 import com.example.quickpick.Callback.FirebaseFailedListener
 import com.example.quickpick.Commmon
 import com.example.quickpick.EndUserLayouts.HomeENdUser
+import com.example.quickpick.Model.AnimationModel
 import com.example.quickpick.Model.DriverModel
 import com.example.quickpick.Model.GeoqueryModel
 import com.example.quickpick.Model.QuickpickdataModel
 import com.example.quickpick.R
+import com.example.quickpick.Remote.IGoogleAPi
+import com.example.quickpick.Remote.RetroFitClient
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQueryEventListener
@@ -34,10 +39,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.*
 import com.karumi.dexter.Dexter
@@ -47,8 +49,12 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import org.json.JSONObject
 import java.io.IOException
+import java.lang.Exception
+import java.lang.StringBuilder
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -66,10 +72,29 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
     var currentLocation: Location? = null
     var firstime = true
 
+
     lateinit var isFirebaseDriverInfoListener: FirebaseDriverInfoListener
     lateinit var isFirebaseFailedListyener: FirebaseFailedListener
 
     var cityname = ""
+    val compositeDisposable = CompositeDisposable()
+    lateinit var iGoogleApi: IGoogleAPi
+
+    var polylinelist: ArrayList<LatLng?>? = null
+    var handler: Handler? = null
+    var index = 0
+    var next: Int = 0
+    var v: Float = 0.0f
+    var lat: Double = 0.0
+    var lng: Double = 0.0
+    var start: LatLng? = null
+    var end: LatLng? = null
+
+    override fun onStop() {
+        compositeDisposable.clear()
+        super.onStop()
+    }
+
     override fun onDestroy() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         super.onDestroy()
@@ -157,7 +182,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                     p0: PermissionRequest?,
                     p1: PermissionToken?
                 ) {
-p1!!.continuePermissionRequest()
+                    p1!!.continuePermissionRequest()
                 }
 
             }).check()
@@ -187,6 +212,8 @@ p1!!.continuePermissionRequest()
 
 
     private fun init() {
+        iGoogleApi = RetroFitClient.instance!!.create(IGoogleAPi::class.java)
+
         isFirebaseDriverInfoListener = this
 
         locatiomRequest = LocationRequest()
@@ -273,7 +300,7 @@ p1!!.continuePermissionRequest()
 
             .addOnSuccessListener { location ->
                 val geocoder = Geocoder(requireContext(), Locale.getDefault())
-                var addreslist :List<Address> =ArrayList()
+                var addreslist: List<Address> = ArrayList()
                 try {
                     addreslist = geocoder.getFromLocation(location.latitude, location.longitude, 1)
                     cityname = addreslist[0].locality
@@ -399,9 +426,8 @@ p1!!.continuePermissionRequest()
                         drivergeomodel.driverInfoModel =
                             (snapshot.getValue(QuickpickdataModel::class.java))
                         isFirebaseDriverInfoListener.onDriverInfoloadedSucess(drivergeomodel)
-                    }
-                    else{
-                        isFirebaseFailedListyener.onFirebaseFaiiled(getString(R.string.key_not_found)+drivergeomodel.key)
+                    } else {
+                        isFirebaseFailedListyener.onFirebaseFaiiled(getString(R.string.key_not_found) + drivergeomodel.key)
                     }
 
 
@@ -461,26 +487,152 @@ p1!!.continuePermissionRequest()
 
 
         if (!TextUtils.isEmpty(cityname)) {
-            val driverlocation=FirebaseDatabase.getInstance().getReference(Commmon.DRIVER_LOCATION_REFERENCE)
-                .child(cityname)
-                .child(driverModel!!.key!!)
-            driverlocation.addValueEventListener(object :ValueEventListener{
+            val driverlocation =
+                FirebaseDatabase.getInstance().getReference(Commmon.DRIVER_LOCATION_REFERENCE)
+                    .child(cityname)
+                    .child(driverModel!!.key!!)
+            driverlocation.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                   if (!snapshot.hasChildren()){
-                       if (Commmon.markerlist.get(driverModel!!.key!!)!=null){
-                           val marker=Commmon.markerlist.get(driverModel!!.key!!)
-                           marker!!.remove()
-                           Commmon.markerlist.remove(driverModel!!.key)
-                           driverlocation.removeEventListener(this)
-                       }
-                   }
+                    if (!snapshot.hasChildren()) {
+                        if (Commmon.markerlist.get(driverModel!!.key!!) != null) {
+                            val marker = Commmon.markerlist.get(driverModel!!.key!!)
+                            marker!!.remove()
+                            Commmon.markerlist.remove(driverModel!!.key)
+                            Commmon.driverSubscribe.remove(driverModel.key!!)
+                            driverlocation.removeEventListener(this)
+                        }
+                    } else {
+                        if (Commmon.markerlist.get(driverModel!!.key!!) != null) {
+
+                            val geoqueryModel = snapshot!!.getValue(GeoqueryModel::class.java)
+                            val animationModel = AnimationModel(false, geoqueryModel)
+
+                            if (Commmon.driverSubscribe.get(driverModel.key!!) != null) {
+                                val marker = Commmon.markerlist.get(driverModel!!.key)
+                                val oldposition = Commmon.driverSubscribe.get(driverModel.key!!)
+
+                                val from = StringBuilder()
+                                    .append(oldposition!!.geoqueyModel!!.l?.get(0))
+                                    .append(",")
+                                    .append(oldposition.geoqueyModel!!.l?.get(1))
+                                    .toString()
+                                val to = StringBuilder()
+                                    .append(animationModel.geoqueyModel!!.l?.get(0))
+                                    .append(",")
+                                    .append(animationModel.geoqueyModel!!.l?.get(1))
+                                    .toString()
+
+                                movemakerAnuimation(
+                                    driverModel.key!!,
+                                    animationModel,
+                                    marker,
+                                    from,
+                                    to
+                                )
+
+
+                            } else {
+                                Commmon.driverSubscribe.put(driverModel.key!!, animationModel)
+                            }
+
+                        }
+
+
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Snackbar.make(requireView(),error.message,Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(requireView(), error.message, Snackbar.LENGTH_SHORT).show()
                 }
 
             })
+        }
+
+
+    }
+
+    private fun movemakerAnuimation(
+        key: String,
+        newData: AnimationModel,
+        marker: Marker?,
+        from: String,
+        to: String
+    ) {
+
+        if (!newData.isRun) {
+
+            compositeDisposable.add(iGoogleApi.getDirections(
+                "driving",
+                "less_driving",
+                from, to,
+                getString(R.string.google_api_key)
+            )!!
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { returnresult ->
+
+                    Log.d("API_RETURN", returnresult)
+
+                    try {
+                        val jsonobject = JSONObject(returnresult)
+                        val jsonarray = jsonobject.getJSONArray("routes")
+
+                        for (i in 0 until jsonarray.length()) {
+                            val route = jsonarray.getJSONObject(i)
+                            val poly = route.getJSONObject("overview_polyline")
+                            val polyline = poly.getString("points")
+                            polylinelist = Commmon.decodepoly(polyline)
+                        }
+
+                        handler = Handler()
+                        index = -1
+                        next = 1
+
+                        val runnable = object : Runnable {
+                            override fun run() {
+                                if (polylinelist!!.size > 1) {
+                                    if (index < polylinelist!!.size - 2) {
+                                        index++
+                                        next = index + 1
+                                        start = polylinelist!![index]!!
+                                        end = polylinelist!![next]!!
+                                    }
+
+                                    val valueanui = ValueAnimator.ofInt(0, 1)
+                                    valueanui.duration = 3000
+                                    valueanui.interpolator = LinearInterpolator()
+                                    valueanui.addUpdateListener { value ->
+                                        v = value.animatedFraction
+                                        lat = v * end!!.latitude + (1 - v) * start!!.latitude
+                                        lng = v * end!!.latitude + (1 - v) * start!!.latitude
+                                        val newpos = LatLng(lat, lng)
+                                        marker!!.position = newpos
+                                        marker!!.rotation = Commmon.getBearing(start!!, newpos)
+
+
+                                    }
+                                    valueanui.start()
+                                    if (index < polylinelist!!.size - 2) {
+                                        handler!!.postDelayed(this, 1500)
+                                    } else if (index < polylinelist!!.size - 1) {
+                                        newData.isRun = false
+                                        Commmon.driverSubscribe.put(key, newData)
+                                    }
+                                }
+                            }
+
+                        }
+
+                        handler!!.postDelayed(runnable, 1500)
+
+                    } catch (e: Exception) {
+                        Snackbar.make(requireView(), e.message!!, Snackbar.LENGTH_LONG).show()
+                    }
+                }
+
+            )
+
+
         }
 
 
