@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -27,6 +28,7 @@ import com.example.quickpick.Model.DriverRequestReceived
 import com.example.quickpick.R
 import com.example.quickpick.Remote.IGoogleAPi
 import com.example.quickpick.Remote.RetroFitClient
+import com.example.quickpick.Utils.UserUtils
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.location.*
@@ -49,6 +51,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.internal.operators.observable.ObservableAll
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
@@ -62,16 +65,17 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class homefragfordrivers : Fragment(), OnMapReadyCallback {
+    private var countDownEvent: Disposable? = null
     private lateinit var chip_decline: Chip
     private lateinit var layout_accept: CardView
     private lateinit var circularProgressbar: CircularProgressBar
     private lateinit var txt_estimate_time: TextView
     private lateinit var txt_estimate_distance: TextView
 
-
+    private var driverRequestReceived: DriverRequestReceived? = null
     private val compositeDisposable = CompositeDisposable()
     private lateinit var iGoogleApi: IGoogleAPi
-
+    private var rootlayout: FrameLayout? = null
     private var blackPolyline: Polyline? = null
     private var greyPolyLine: Polyline? = null
     private var polygonOptions: PolylineOptions? = null
@@ -83,9 +87,9 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
     private lateinit var homeviewmodel: HomeENdUser
     private lateinit var mapFragment: SupportMapFragment
 
-    private  var locatiomRequest: LocationRequest?=null
-    private  var locationCallback: LocationCallback?=null
-    private  var fusedLocationProviderClient: FusedLocationProviderClient?=null
+    private var locatiomRequest: LocationRequest? = null
+    private var locationCallback: LocationCallback? = null
+    private var fusedLocationProviderClient: FusedLocationProviderClient? = null
 
     private lateinit var onlineRef: DatabaseReference
     private var currentUserRef: DatabaseReference? = null
@@ -108,7 +112,8 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        EventBus.getDefault().register(this)
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this)
     }
 
     override fun onDestroy() {
@@ -125,6 +130,7 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onDriverRequestReceived(event: DriverRequestReceived) {
+        driverRequestReceived=event
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -235,7 +241,7 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
                             chip_decline.visibility = View.VISIBLE
                             layout_accept.visibility = View.VISIBLE
 
-                            Observable.interval(100, TimeUnit.MILLISECONDS)
+                          countDownEvent = Observable.interval(100, TimeUnit.MILLISECONDS)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .doOnNext { x ->
                                     circularProgressbar.progress += 1f
@@ -248,7 +254,7 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
                                         Toast.LENGTH_LONG
                                     ).show()
 
-                                }
+                                }.subscribe()
 
 
 
@@ -302,6 +308,22 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
         circularProgressbar = root!!.findViewById(R.id.circularProgress) as CircularProgressBar
         txt_estimate_distance = root!!.findViewById(R.id.txt_estimate_distance) as TextView
         txt_estimate_time = root!!.findViewById(R.id.txt_estimate_time) as TextView
+        rootlayout = root!!.findViewById(R.id.root)
+        chip_decline.setOnClickListener {
+            if (driverRequestReceived != null) {
+
+                if (countDownEvent != null)
+                    countDownEvent!!.dispose()
+                chip_decline.visibility = View.GONE
+                layout_accept.visibility = View.GONE
+                mMap.clear()
+                circularProgressbar.progress = 0f
+                UserUtils.sendDeclineRequest(rootlayout!!, activity!!, driverRequestReceived!!.key)
+                driverRequestReceived = null
+
+            }
+
+        }
 
 
     }

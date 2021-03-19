@@ -27,6 +27,8 @@ import kotlin.collections.HashSet
 
 object Commmon {
 
+    val DRIVER_KEY: String="DriverKey"
+    val REQUEST_DRIVER_DECLINE: String="Decline"
     val RIDER_KEY: String="RiderKey"
     val PICK_UP_LOCATION: String="PickUP Point"
     val REQUEST_DRIVER_TITLE: String="Request Driver For Ride"

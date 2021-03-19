@@ -1,4 +1,4 @@
-package com.example.quickpick.EndUserLayouts.Fragment
+ package com.example.quickpick.EndUserLayouts.Fragment
 
 import android.Manifest
 import android.animation.ValueAnimator
@@ -622,6 +622,8 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                             marker!!.remove()
                             Commmon.markerlist.remove(driverModel!!.key)
                             Commmon.driverSubscribe.remove(driverModel.key!!)
+                            if (Commmon.driverfound!=null&&Commmon.driverfound[driverModel.key!!]!=null)
+                                Commmon.driverfound[driverModel!!.key!!]
                             driverlocation.removeEventListener(this)
                         }
                     } else {

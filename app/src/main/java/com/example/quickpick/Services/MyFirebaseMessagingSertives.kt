@@ -1,6 +1,7 @@
 package com.example.quickpick.Services
 
 import com.example.quickpick.Commmon
+import com.example.quickpick.Model.DeclineRequestFromDrivers
 import com.example.quickpick.Model.DriverRequestReceived
 import com.example.quickpick.Utils.UserUtils
 import com.google.android.gms.common.internal.service.Common
@@ -29,14 +30,24 @@ class MyFirebaseMessagingSertives : FirebaseMessagingService() {
         val data = remoteMessage.data
         if (data != null) {
             if (data[Commmon.NOTI_TITLE].equals(Commmon.REQUEST_DRIVER_TITLE)) {
-EventBus.getDefault()
-    .postSticky(
-        DriverRequestReceived(data[Commmon.RIDER_KEY]!!,
-    data[Commmon.PICK_UP_LOCATION]!!
-        )
-    )
+                EventBus.getDefault()
+                    .postSticky(
+                        DriverRequestReceived(
+                            data[Commmon.RIDER_KEY]!!,
+                            data[Commmon.PICK_UP_LOCATION]!!
+                        )
+                    )
 
-            } else
+            }
+            else if (data[Commmon.NOTI_TITLE]!=null){
+                if (data[Commmon.NOTI_TITLE].equals(Commmon.REQUEST_DRIVER_DECLINE)){
+                    EventBus.getDefault().postSticky(DeclineRequestFromDrivers())
+                }
+
+            }
+
+
+            else
 
                 Commmon.shownotification(
                     this, Random.nextInt(), data[Commmon.NOTI_TITLE],

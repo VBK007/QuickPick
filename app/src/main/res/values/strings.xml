@@ -18,4 +18,7 @@
     <string name="finding_your_route">finding_your_route</string>
     <string name="send_request_driver_found">Driver Not Found</string>
     <string name="Decline">decline</string>
+    <string name="decline_failed">Decline Failed</string>
+    <string name="decline_Sucess">DeclineSucess</string>
+    <string name="no_driver_accepted">No Driver accept your Request</string>
 </resources>

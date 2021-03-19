@@ -17,6 +17,9 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.example.quickpick.EventBus.SelelectedPlaceEvent
+import com.example.quickpick.Model.DeclineRequestFromDrivers
+import com.example.quickpick.Model.DriverModel
+import com.example.quickpick.Model.QuickpickdataModel
 import com.example.quickpick.Remote.IGoogleAPi
 import com.example.quickpick.Remote.RetroFitClient
 import com.example.quickpick.Utils.UserUtils
@@ -40,7 +43,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     var animator: ValueAnimator? = null
     private val DESIRED_NUM_OF_SPINS = 5
     private val DESIRED_SECOUNDS_PER_ONE_FULL_360_SPIN = 40
-
+    private var lastDriverCall: DriverModel? = null
     var lastplusAnimato: Animator? = null
     private lateinit var mMap: GoogleMap
     private var selectedPlaceEvent: SelelectedPlaceEvent? = null
@@ -79,15 +82,26 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onStop() {
         compositeDisposable.clear()
-        if (EventBus.getDefault().hasSubscriberForEvent(SelelectedPlaceEvent::class.java)) {
+        if (EventBus.getDefault().hasSubscriberForEvent(SelelectedPlaceEvent::class.java))
             EventBus.getDefault().removeStickyEvent(SelelectedPlaceEvent::class.java)
-            EventBus.getDefault().unregister(this)
 
-        }
+        if (EventBus.getDefault().hasSubscriberForEvent(DeclineRequestFromDrivers::class.java))
+            EventBus.getDefault().removeStickyEvent(DeclineRequestFromDrivers::class.java)
+        EventBus.getDefault().unregister(this)
+
 
         super.onStop()
     }
 
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onDeclineMessage(event: DeclineRequestFromDrivers) {
+        if (lastDriverCall != null) {
+            Commmon.driverfound.get(lastDriverCall!!.key)!!.isDecline=true
+            findnearbydrivrers(selectedPlaceEvent!!.orgin)
+
+        }
+    }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onSelectedPlaceEvent(event: SelelectedPlaceEvent) {
@@ -233,7 +247,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         if (Commmon.driverfound.size > 0) {
 
             var min = 0f
-            var foundriver = Commmon.driverfound[Commmon.driverfound.keys.iterator().next()]
+            var foundriver: DriverModel? = null
             val currentLocation = Location("")
             currentLocation.latitude = target!!.latitude
             currentLocation.longitude = target!!.longitude
@@ -243,27 +257,47 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
                 driverLocation.longitude = Commmon.driverfound[key]!!.geolocation!!.longitude
                 if (min == 0f) {
                     min = driverLocation.distanceTo(currentLocation)
-                    foundriver = Commmon.driverfound[key]
+                    if (!Commmon.driverfound[key]!!.isDecline) {
+                        foundriver = Commmon.driverfound[key]
+                        break
+                    } else {
+                        continue
+                    }
+
 
                 } else if (driverLocation.distanceTo(currentLocation) < min) {
                     min = driverLocation.distanceTo(currentLocation)
-                    foundriver = Commmon.driverfound[key]
+                    if (!Commmon.driverfound[key]!!.isDecline) {
+                        foundriver = Commmon.driverfound[key]
+                        break
+                    } else {
+                        continue
+                    }
 
                 }
 
 
             }
-
-
-            UserUtils.sendRequestToDriver(
-                this,
-                amin_layout,
-                foundriver, target
-            )
+            if (foundriver != null) {
+                UserUtils.sendRequestToDriver(
+                    this,
+                    amin_layout,
+                    foundriver, target
+                )
+                lastDriverCall = foundriver
+            } else {
+                Toast.makeText(this, getString(R.string.no_driver_accepted), Toast.LENGTH_LONG)
+                    .show()
+                lastDriverCall = null
+                finish()
+            }
 
 
         } else {
             Toast.makeText(this, "" + R.string.driver_notfound, Toast.LENGTH_LONG).show()
+            lastDriverCall = null
+            finish()
+
 
         }
 
