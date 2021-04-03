@@ -4,7 +4,7 @@
     android:id="@+id/finding_your_ride_lay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone">
+    android:visibility="visible">
 
 
     <LinearLayout

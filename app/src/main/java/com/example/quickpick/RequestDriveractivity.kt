@@ -1,7 +1,9 @@
 package com.example.quickpick
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
@@ -15,6 +17,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.quickpick.EventBus.SelelectedPlaceEvent
 import com.example.quickpick.Model.DeclineRequestFromDrivers
@@ -38,6 +41,7 @@ import org.json.JSONObject
 import java.lang.Exception
 
 class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
+
     var lastusercirclr: Circle? = null
     val duration = 1000
     var animator: ValueAnimator? = null
@@ -48,13 +52,17 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var selectedPlaceEvent: SelelectedPlaceEvent? = null
     private lateinit var mapFragment: SupportMapFragment
+
     private lateinit var btn_confirm_uber: Button
     private lateinit var btn_confirm_pickup: Button
+
     private lateinit var cardpickup: CardView
+
     private lateinit var cardviewconfirm: CardView
+
     private lateinit var txt_orgin: TextView
-    private var txt_address_pickup: TextView? = null
-    private lateinit var fill_maps: View
+    private lateinit var txt_address_pickup: TextView
+    private var fill_maps: View? = null
     private lateinit var finding_your_ride: CardView
 
 
@@ -97,7 +105,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onDeclineMessage(event: DeclineRequestFromDrivers) {
         if (lastDriverCall != null) {
-            Commmon.driverfound.get(lastDriverCall!!.key)!!.isDecline=true
+            Commmon.driverfound.get(lastDriverCall!!.key)!!.isDecline = true
             findnearbydrivrers(selectedPlaceEvent!!.orgin)
 
         }
@@ -112,14 +120,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_driveractivity)
-        btn_confirm_uber.findViewById<View>(R.id.btn_cnfm) as Button
-        cardpickup.findViewById<View>(R.id.confirm_pickup_layout)
-        cardviewconfirm.findViewById<View>(R.id.confirm_uber_layout)
-        txt_address_pickup!!.findViewById<View>(R.id.address_pickup)
-        btn_confirm_pickup.findViewById<Button>(R.id.btn_confirmpickup)
-        fill_maps.findViewById<View>(R.id.fill_maps)
-        finding_your_ride.findViewById<CardView>(R.id.finding_your_ride_lay)
-        amin_layout = findViewById(R.id.main_layout)
+
         inti()
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -131,6 +132,19 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         iGoogleApi = RetroFitClient.instance!!.create(IGoogleAPi::class.java)
 
 //Event
+        fill_maps!!.findViewById<View>(R.id.fill_maps)
+        amin_layout = findViewById(R.id.main_layout)
+
+        cardpickup.findViewById<CardView>(R.id.confirm_pickup_layout)
+        cardviewconfirm.findViewById<CardView>(R.id.confirm_uber_layout)
+
+        txt_address_pickup.findViewById<View>(R.id.address_pickup)
+        btn_confirm_uber.findViewById<View>(R.id.btn_confirm_uber) as Button
+
+        finding_your_ride.findViewById<CardView>(R.id.finding_your_ride_lay)
+        btn_confirm_pickup.findViewById<Button>(R.id.btn_confirm_pickup)
+
+
         btn_confirm_uber.setOnClickListener {
             cardpickup.visibility = View.VISIBLE
             cardviewconfirm.visibility = View.GONE
@@ -139,7 +153,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
             setDataPickUp()
         }
 
-        btn_confirm_pickup.setOnClickListener {
+        btn_confirm_pickup!!.setOnClickListener {
 
             if (mMap == null) return@setOnClickListener
             if (selectedPlaceEvent == null) return@setOnClickListener
@@ -165,7 +179,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     private fun addMarkerPlusAnimation() {
 
         cardpickup.visibility = View.GONE
-        fill_maps.visibility = View.VISIBLE
+        fill_maps!!.visibility = View.VISIBLE
         finding_your_ride.visibility = View.VISIBLE
 
         orginmarker = mMap.addMarker(
@@ -311,7 +325,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setDataPickUp() {
-        txt_address_pickup!!.text = if (txt_orgin != null) txt_orgin!!.text else "None"
+        txt_address_pickup.text = if (txt_orgin != null) txt_orgin!!.text else "None"
         mMap.clear()
         addPickUpMarker()
 
@@ -337,31 +351,55 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
 
-        drawPath(selectedPlaceEvent!!)
-
-
         //layout
 
-        try {
-            val sucess = googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                    this,
-                    R.raw.uber_maps_style
-                )
-            )
 
-            if (!sucess) {
-                Snackbar.make(
-                    mapFragment.requireView(),
-                    "Load Map Style Failed",
-                    Snackbar.LENGTH_LONG
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        drawPath(selectedPlaceEvent!!)
+        mMap.isMyLocationEnabled = true
+        mMap.uiSettings.isMyLocationButtonEnabled = true
+        mMap.setOnMyLocationClickListener { location ->
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedPlaceEvent!!.orgin, 18f))
+            mMap.uiSettings.isZoomControlsEnabled = true
+            try {
+                val sucess = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        this,
+                        R.raw.uber_maps_style
+                    )
                 )
-                    .show()
+
+                if (!sucess) {
+                    Snackbar.make(
+                        mapFragment.requireView(),
+                        "Load Map Style Failed",
+                        Snackbar.LENGTH_LONG
+                    )
+                        .show()
+                }
+
+            } catch (e: Exception) {
+                Snackbar.make(mapFragment.requireView(), e.message!!, Snackbar.LENGTH_LONG).show()
             }
 
-        } catch (e: Exception) {
-            Snackbar.make(mapFragment.requireView()!!, e.message!!, Snackbar.LENGTH_LONG).show()
         }
+
+
+        val locationButton = findViewById<View>("1".toInt())!!.parent!! as View
+
+        val params = locationButton.layoutParams as RelativeLayout.LayoutParams
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+        params.bottomMargin = 250
 
 
     }

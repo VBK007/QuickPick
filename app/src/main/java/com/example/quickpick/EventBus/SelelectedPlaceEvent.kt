@@ -12,6 +12,7 @@ class SelelectedPlaceEvent (var orgin:LatLng,var destination:LatLng){
         .toString()
     val destinationString:String
     get()=StringBuilder()
+        .append(destination.latitude)
         .append(",")
         .append(destination.longitude)
         .toString()
