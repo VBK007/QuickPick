@@ -35,7 +35,7 @@
 
         <activity
             android:name=".RequestDriveractivity"
-            android:label="@string/title_activity_request_driveractivity"></activity>
+            android:label="@string/title_activity_request_driveractivity"/>
         <activity
             android:name=".Maps.MapsActivity"
             android:label="@string/title_activity_maps" />
@@ -51,14 +51,12 @@
         <activity
             android:name=".register"
             android:theme="@style/Mytheme" />
-        <activity
-            android:name=".mainactivity"
-            android:theme="@style/Mythmain" />
+
         <activity
             android:name=".Admin.Adminactivity"
             android:theme="@style/Mytheme2" />
         <activity
-            android:name=".MainActivity"
+            android:name=".mainactivity"
             android:theme="@style/MythemeS">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -546,7 +546,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                         drivergeomodel.driverInfoModel =
                             (snapshot.getValue(QuickpickdataModel::class.java))
 
-                        Commmon.driverfound[drivergeomodel.key!!]!!.driverInfoModel =
+                        Commmon.driverfound[drivergeomodel.key!!]?.driverInfoModel =
                             (snapshot.getValue(QuickpickdataModel::class.java))
                         isFirebaseDriverInfoListener.onDriverInfoloadedSucess(drivergeomodel)
                     } else {

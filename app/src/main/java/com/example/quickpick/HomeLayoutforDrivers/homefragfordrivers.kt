@@ -297,8 +297,6 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
 
         mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
-
-
         mapFragment.getMapAsync(this)
         return root
 
@@ -526,6 +524,7 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
                 }
 
             }).check()
+
 
 
         try {

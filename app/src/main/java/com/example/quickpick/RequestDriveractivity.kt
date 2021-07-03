@@ -82,7 +82,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     private var amin_layout: RelativeLayout? = null
 
     override fun onStart() {
-        if (EventBus.getDefault().isRegistered(this)) {
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
         super.onStart()
@@ -95,9 +95,8 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
 
         if (EventBus.getDefault().hasSubscriberForEvent(DeclineRequestFromDrivers::class.java))
             EventBus.getDefault().removeStickyEvent(DeclineRequestFromDrivers::class.java)
+
         EventBus.getDefault().unregister(this)
-
-
         super.onStop()
     }
 
@@ -105,7 +104,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onDeclineMessage(event: DeclineRequestFromDrivers) {
         if (lastDriverCall != null) {
-            Commmon.driverfound.get(lastDriverCall!!.key)!!.isDecline = true
+            Commmon.driverfound[lastDriverCall!!.key]!!.isDecline = true
             findnearbydrivrers(selectedPlaceEvent!!.orgin)
 
         }
@@ -121,6 +120,20 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_driveractivity)
 
+
+        fill_maps=findViewById<View>(R.id.fill_maps)
+        amin_layout = findViewById(R.id.main_layout)
+
+        cardpickup=findViewById<CardView>(R.id.confirm_pickup_layout)
+        cardviewconfirm=findViewById<CardView>(R.id.confirm_uber_layout)
+
+        txt_address_pickup = findViewById<TextView>(R.id.address_pickup)
+        btn_confirm_uber=findViewById<View>(R.id.btn_confirm_uber) as Button
+
+        finding_your_ride=findViewById<CardView>(R.id.finding_your_ride_lay)
+        btn_confirm_pickup=findViewById<Button>(R.id.btn_confirm_pickup)
+
+
         inti()
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -132,17 +145,6 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         iGoogleApi = RetroFitClient.instance!!.create(IGoogleAPi::class.java)
 
 //Event
-        fill_maps!!.findViewById<View>(R.id.fill_maps)
-        amin_layout = findViewById(R.id.main_layout)
-
-        cardpickup.findViewById<CardView>(R.id.confirm_pickup_layout)
-        cardviewconfirm.findViewById<CardView>(R.id.confirm_uber_layout)
-
-        txt_address_pickup.findViewById<View>(R.id.address_pickup)
-        btn_confirm_uber.findViewById<View>(R.id.btn_confirm_uber) as Button
-
-        finding_your_ride.findViewById<CardView>(R.id.finding_your_ride_lay)
-        btn_confirm_pickup.findViewById<Button>(R.id.btn_confirm_pickup)
 
 
         btn_confirm_uber.setOnClickListener {
@@ -394,8 +396,8 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-        val locationButton = findViewById<View>("1".toInt())!!.parent!! as View
-
+        val locationButton = (mapFragment.requireView()?.findViewById<View>("1".toInt())!!.parent as View)
+            .findViewById<View>("2".toInt())
         val params = locationButton.layoutParams as RelativeLayout.LayoutParams
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
