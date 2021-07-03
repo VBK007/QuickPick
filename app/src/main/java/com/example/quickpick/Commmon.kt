@@ -202,9 +202,6 @@ object Commmon {
     ): ValueAnimator {
         val va = ValueAnimator.ofFloat(0f, 100f)
        va.duration= duration.toLong()
-
-
-
          va.addUpdateListener (listener)
         va.repeatCount=ValueAnimator.INFINITE
         va.repeatMode=ValueAnimator.RESTART

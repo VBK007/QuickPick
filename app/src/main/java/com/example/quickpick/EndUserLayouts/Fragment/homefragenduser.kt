@@ -404,9 +404,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
             .addOnFailureListener { e ->
                 Snackbar.make(requireView(), e.message!!, Snackbar.LENGTH_SHORT).show()
 
-            }
-
-            .addOnSuccessListener { location ->
+            }.addOnSuccessListener { location ->
                 val geocoder = Geocoder(requireContext(), Locale.getDefault())
                 var addreslist: List<Address> = ArrayList()
                 try {
@@ -538,6 +536,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
 
 
     private fun finduserbykey(drivergeomodel: DriverModel?) {
+
         FirebaseDatabase.getInstance().getReference(Commmon.DRIVER_INFO_REFERENCE)
             .child(drivergeomodel!!.key!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -565,7 +564,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
     }
 
     private fun addDriverMaker() {
-        if (Commmon.driverfound.size > 0) {
+        if (Commmon.driverfound.isNotEmpty()) {
             io.reactivex.Observable.fromIterable(Commmon.driverfound.keys)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -574,7 +573,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                         finduserbykey(Commmon.driverfound[key!!])
 
                     }, { t: Throwable? ->
-                        Snackbar.make(requireView(), t!!.message!!, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), t!!.message!!+"drivers", Snackbar.LENGTH_SHORT).show()
 
                     }
                 )
@@ -586,25 +585,21 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
     }
 
     override fun onDriverInfoloadedSucess(driverModel: DriverModel?) {
+
         if (!Commmon.markerlist.containsKey(driverModel!!.key))
-            Commmon.markerlist.put(
-                driverModel.key!!,
-
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(
-                            LatLng(
-                                driverModel.geolocation!!.latitude,
-                                driverModel.geolocation!!.longitude
-                            )
+            Commmon.markerlist[driverModel.key!!] = mMap.addMarker(
+                MarkerOptions()
+                    .position(
+                        LatLng(
+                            driverModel.geolocation!!.latitude,
+                            driverModel.geolocation!!.longitude
                         )
-                        .flat(true)
-                        .title(Commmon.buildname(driverModel.driverInfoModel!!.username))
-                        .snippet(driverModel.driverInfoModel!!.phonenumber)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.cae))
+                    )
+                    .flat(true)
+                    .title(Commmon.buildname(driverModel.driverInfoModel!!.username))
+                    .snippet(driverModel.driverInfoModel!!.phonenumber)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.cae))
 
-
-                )
 
             )
 

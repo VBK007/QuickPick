@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -8,8 +8,8 @@
         android:id="@+id/txt_destination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp"
         android:background="@drawable/pickup_icon_corner"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
@@ -18,9 +18,9 @@
         android:text="met_driver_here"
         android:textColor="@color/white" />
 
-    <view
+    <View
         android:layout_width="1dp"
-        android:layout_height="2dp"
+        android:layout_height="12dp"
         android:layout_gravity="center_horizontal"
         android:background="@color/uber_color"
 

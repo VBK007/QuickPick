@@ -45,10 +45,12 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     var lastusercirclr: Circle? = null
     val duration = 1000
     var animator: ValueAnimator? = null
+    var lastplusAnimato: Animator? = null
+
     private val DESIRED_NUM_OF_SPINS = 5
     private val DESIRED_SECOUNDS_PER_ONE_FULL_360_SPIN = 40
+
     private var lastDriverCall: DriverModel? = null
-    var lastplusAnimato: Animator? = null
     private lateinit var mMap: GoogleMap
     private var selectedPlaceEvent: SelelectedPlaceEvent? = null
     private lateinit var mapFragment: SupportMapFragment
@@ -121,17 +123,17 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_request_driveractivity)
 
 
-        fill_maps=findViewById<View>(R.id.fill_maps)
+        fill_maps = findViewById<View>(R.id.fill_maps)
         amin_layout = findViewById(R.id.main_layout)
 
-        cardpickup=findViewById<CardView>(R.id.confirm_pickup_layout)
-        cardviewconfirm=findViewById<CardView>(R.id.confirm_uber_layout)
+        cardpickup = findViewById<CardView>(R.id.confirm_pickup_layout)
+        cardviewconfirm = findViewById<CardView>(R.id.confirm_uber_layout)
 
         txt_address_pickup = findViewById<TextView>(R.id.address_pickup)
-        btn_confirm_uber=findViewById<View>(R.id.btn_confirm_uber) as Button
+        btn_confirm_uber = findViewById<View>(R.id.btn_confirm_uber) as Button
 
-        finding_your_ride=findViewById<CardView>(R.id.finding_your_ride_lay)
-        btn_confirm_pickup=findViewById<Button>(R.id.btn_confirm_pickup)
+        finding_your_ride = findViewById<CardView>(R.id.finding_your_ride_lay)
+        btn_confirm_pickup = findViewById<Button>(R.id.btn_confirm_pickup)
 
 
         inti()
@@ -146,26 +148,23 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
 
 //Event
 
-
         btn_confirm_uber.setOnClickListener {
+            Log.e("varutha", "varuthunu nenaiga")
             cardpickup.visibility = View.VISIBLE
             cardviewconfirm.visibility = View.GONE
-
-
             setDataPickUp()
         }
 
-        btn_confirm_pickup!!.setOnClickListener {
 
+
+
+        btn_confirm_pickup!!.setOnClickListener {
+            Log.e("ithuga", "varutu")
             if (mMap == null) return@setOnClickListener
             if (selectedPlaceEvent == null) return@setOnClickListener
-
             mMap.clear()
-
-
             val cameraPos = CameraPosition.Builder()
                 .target(selectedPlaceEvent!!.orgin)
-
                 .tilt(45f)
                 .zoom(16f)
                 .build()
@@ -180,6 +179,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun addMarkerPlusAnimation() {
 
+
         cardpickup.visibility = View.GONE
         fill_maps!!.visibility = View.VISIBLE
         finding_your_ride.visibility = View.VISIBLE
@@ -189,6 +189,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
                 BitmapDescriptorFactory.defaultMarker()
             ).position(selectedPlaceEvent!!.orgin)
         )
+        Log.e("selec", selectedPlaceEvent!!.orgin.toString())
 
         addPulsatinEffect(selectedPlaceEvent!!.orgin)
 
@@ -196,12 +197,12 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun addPulsatinEffect(orgin: LatLng) {
+
         if (lastplusAnimato != null) lastplusAnimato!!.cancel()
         if (lastusercirclr != null) lastusercirclr!!.center = orgin
-
         lastplusAnimato =
-            Commmon.valueAnimate(duration, object : ValueAnimator.AnimatorUpdateListener {
-                override fun onAnimationUpdate(animation: ValueAnimator?) {
+            Commmon.valueAnimate(duration,
+                ValueAnimator.AnimatorUpdateListener { animation ->
                     if (lastusercirclr != null) lastusercirclr!!.radius =
                         animation!!.animatedValue.toString().toDouble() else {
                         lastusercirclr = mMap.addCircle(
@@ -221,10 +222,9 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
 
 
                     }
-                }
+                })
 
-
-            })
+        Log.e("orgin",orgin.toString())
 
         startMapCameraSpinningAnimation(mMap.cameraPosition.target)
 
@@ -232,6 +232,8 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun startMapCameraSpinningAnimation(target: LatLng?) {
+
+        Log.e("target","targ"+target.toString())
         if (animator != null) animator!!.cancel()
         animator = ValueAnimator.ofFloat(0f, (DESIRED_NUM_OF_SPINS * 360).toFloat())
         animator!!.duration =
@@ -240,7 +242,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         animator!!.startDelay = (100)
         animator!!.addUpdateListener { valueAnimation ->
             val nearBearingvalue = valueAnimation.animatedValue as Float
-            mMap.moveCamera(
+              mMap.moveCamera(
                 CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder()
                         .target(target)
@@ -249,19 +251,20 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
                         .bearing(nearBearingvalue)
                         .build()
                 )
-            )
+             )
 
         }
         animator!!.start()
-
         findnearbydrivrers(target)
 
 
     }
 
     private fun findnearbydrivrers(target: LatLng?) {
-        if (Commmon.driverfound.size > 0) {
 
+        Log.e("driver",Commmon.driverfound.toString())
+
+        if (Commmon.driverfound.isNotEmpty()) {
             var min = 0f
             var foundriver: DriverModel? = null
             val currentLocation = Location("")
@@ -301,7 +304,8 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
                     foundriver, target
                 )
                 lastDriverCall = foundriver
-            } else {
+            }
+            else {
                 Toast.makeText(this, getString(R.string.no_driver_accepted), Toast.LENGTH_LONG)
                     .show()
                 lastDriverCall = null
@@ -309,7 +313,9 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
 
-        } else {
+        }
+
+        else {
             Toast.makeText(this, "" + R.string.driver_notfound, Toast.LENGTH_LONG).show()
             lastDriverCall = null
             finish()
@@ -396,8 +402,9 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-        val locationButton = (mapFragment.requireView()?.findViewById<View>("1".toInt())!!.parent as View)
-            .findViewById<View>("2".toInt())
+        val locationButton =
+            (mapFragment.requireView()?.findViewById<View>("1".toInt())!!.parent as View)
+                .findViewById<View>("2".toInt())
         val params = locationButton.layoutParams as RelativeLayout.LayoutParams
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
