@@ -3,6 +3,7 @@ package com.example.quickpick.HomeLayoutforDrivers
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
@@ -26,6 +27,8 @@ import org.w3c.dom.Text
 import java.lang.StringBuilder
 
 class homefordriandowner : AppCompatActivity() {
+
+    var strngemail:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_homefordriandowner)
@@ -37,7 +40,14 @@ class homefordriandowner : AppCompatActivity() {
         drawer?.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
         loaduserInfo()
+
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val headerView = navigationView.getHeaderView(0)
+        val email=headerView.findViewById<TextView>(R.id.email)
+        Log.d("emailintthe text",email.text.toString())
+
+
+
 
 
         if (savedInstanceState==null){
@@ -75,8 +85,13 @@ class homefordriandowner : AppCompatActivity() {
 
                         val email=headerView.findViewById<TextView>(R.id.email)
                         email.text = model?.email
+                        strngemail = model?.email.toString()
+
+
                         val phone=headerView.findViewById<TextView>(R.id.phone)
                         phone.text =model?.phonenumber
+
+
 
                         val rating=headerView.findViewById<RelativeLayout>(R.id.invisible)
                         rating.visibility=View.VISIBLE
@@ -97,14 +112,20 @@ class homefordriandowner : AppCompatActivity() {
 
     fun upprofile(item: MenuItem) {
         if (item.itemId==R.id.endprofupdate){
-            Toast.makeText(this, "Click on setting", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Your profile", Toast.LENGTH_SHORT).show()
+            val intent=Intent(this@homefordriandowner,Driverprofilemodelactivity::class.java)
+            intent?.putExtra("email",strngemail)
+            startActivity(intent)
+
 
         }
     }
 
     fun prevtravel(item: MenuItem) {
         if (item.itemId==R.id.prevtravel){
-            Toast.makeText(this, "Click on setting", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Driver Previous Travel", Toast.LENGTH_SHORT).show()
+            val intent=Intent(this@homefordriandowner,Preioustripactivity::class.java)
+            startActivity(intent)
 
         }
     }
@@ -145,4 +166,6 @@ class homefordriandowner : AppCompatActivity() {
 
         }
     }
+
+
 }

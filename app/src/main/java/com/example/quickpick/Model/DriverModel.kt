@@ -2,16 +2,14 @@ package com.example.quickpick.Model
 
 import com.firebase.geofire.GeoLocation
 
-class DriverModel {
+class DriverModel(var key: String?, geolocation: GeoLocation?) {
 
 
-    var key: String? = null
     var geolocation: GeoLocation? = null
     var isDecline:Boolean=false
     var driverInfoModel:QuickpickdataModel?=null
 
-    constructor(key:String?,geolocation:GeoLocation?){
-        this.key=key
+    init {
         this.geolocation=geolocation!!
     }
 

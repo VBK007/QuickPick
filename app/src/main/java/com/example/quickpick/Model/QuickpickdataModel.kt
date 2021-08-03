@@ -14,9 +14,7 @@ class QuickpickdataModel {
      var oemail:String=""
      var demail:String=""
      var rating=0.0
-var uid:String=""
+     var uid:String=""
      var isEnduser:Boolean=false
      var registerdate:String=""
-
-
 }

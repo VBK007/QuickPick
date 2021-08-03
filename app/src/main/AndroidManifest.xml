@@ -65,6 +65,19 @@
             </intent-filter>
         </activity>
 
+
+        <activity android:name=".HomeLayoutforDrivers.Driverprofilemodelactivity"
+            android:theme="@style/Mytheme2"
+            />
+
+        <activity android:name=".HomeLayoutforDrivers.Describeprofileactivity"
+            android:theme="@style/Mytheme2"
+            />
+
+        <activity android:name=".HomeLayoutforDrivers.Preioustripactivity"
+            android:theme="@style/Mytheme2"
+            />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

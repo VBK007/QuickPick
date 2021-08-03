@@ -309,7 +309,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(this, getString(R.string.no_driver_accepted), Toast.LENGTH_LONG)
                     .show()
                 lastDriverCall = null
-                finish()
+                //finish()
             }
 
 

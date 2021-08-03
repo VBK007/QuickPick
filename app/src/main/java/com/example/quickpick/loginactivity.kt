@@ -65,7 +65,7 @@ class loginactivity : AppCompatActivity() {
                 val editemail = findViewById<EditText>(R.id.emailuser)
                 val editpass = findViewById<EditText>(R.id.emailpassword)
 
-                if(editemail.text.toString().equals(adminemail)&&editpass.text.toString().equals(password)){
+                if(editemail.text.toString() == adminemail &&editpass.text.toString().equals(password)){
 
                     startActivity(Intent(this,Adminactivity::class.java))
 

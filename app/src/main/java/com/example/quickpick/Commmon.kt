@@ -13,6 +13,7 @@ import android.graphics.Color
 import android.os.Build
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
+import com.example.quickpick.HomeLayoutforDrivers.Previoustripdatamodel
 import com.example.quickpick.Model.AnimationModel
 import com.example.quickpick.Model.DriverModel
 import com.example.quickpick.Model.QuickpickdataModel
@@ -39,7 +40,9 @@ object Commmon {
     val TOKEN_REFERENCE: String = "Token"
     var currentuser: QuickpickdataModel? = null
     var DRIVER_INFO_REFERENCE: String = "Qucikowner";
+    var DRIVER_PREVIOUS_TRIP="PreviousTrip"
     val DRIVER_LOCATION_REFERENCE: String = "DriverLocation"
+    var previousdatadescribe:Previoustripdatamodel?=null
 
     fun shownotification(
         context: Context,

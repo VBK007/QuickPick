@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/image"
+        />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:fillViewport="true"
+        android:background="@color/white"
+        android:layout_height="0dp">
+
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+
+            <!--hostedby-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:textAlignment="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1">
+
+
+                <TextView
+                    android:id="@+id/tv_hsted"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.45"
+                    android:gravity="center"
+                    android:text="Driver Name"
+                    android:textAlignment="textStart"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    tools:ignore="RtlCompat"
+                    app:drawableRightCompat="@drawable/ic_baseline_drag_indicator_24" />
+
+
+                <TextView
+                    android:id="@+id/tv_hsted_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="0.45"
+                    android:gravity="left"
+                    android:layout_gravity="center_vertical"
+                    android:text="Sherlock Homes"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+
+            </TableRow>
+
+            <!--mobileno-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/tv_mbil"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:drawableRight="@drawable/ic_baseline_drag_indicator_24"
+                    android:gravity="center"
+                    android:text="Driver Mobile Number:"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="textStart"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    tools:ignore="RtlCompat" />
+
+
+                <TextView
+                    android:id="@+id/tv_mbilnum"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.45"
+                    android:gravity="left"
+                    android:layout_gravity="center_vertical"
+                    android:text="+91 9123456780"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+
+            <!--mailid-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/hostmailid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:drawableRight="@drawable/ic_baseline_drag_indicator_24"
+                    android:gravity="center"
+                    android:text="Driver Mail"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="textStart"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    tools:ignore="RtlCompat" />
+
+
+                <TextView
+                    android:id="@+id/hostmailidoptional"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="0.45"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left"
+                    android:text="abc@abc.com"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+            <!--foodavailability-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_food"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:drawableRight="@drawable/ic_baseline_drag_indicator_24"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:text="End UserName"
+                    android:textAlignment="textStart"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    tools:ignore="RtlCompat" />
+
+
+                <TextView
+                    android:id="@+id/tv_fud_avb"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.45"
+                    android:gravity="left"
+                    android:layout_gravity="center_vertical"
+                    android:text="Yes"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+            <!--location-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/tv_loc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.59"
+                    android:drawableRight="@drawable/ic_baseline_drag_indicator_24"
+                    android:gravity="center"
+                    android:text="End User Phonenumber"
+                    android:textAlignment="textStart"
+                    android:textColor="#060606"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    tools:ignore="RtlCompat" />
+
+
+                <TextView
+                    android:id="@+id/tv_loc_detail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="3"
+                    android:layout_marginLeft="-4dp"
+                    android:layout_weight="0.50"
+                    android:gravity="left"
+                    android:text="1234 Address Ave, City, State Country - Zipcode."
+                    android:textColor="#060606"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/img_loc"
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="0.1"
+                    >
+
+                </ImageView>
+
+            </TableRow>
+            <!--dateandtime-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/textview_mbil"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:drawableRight="@drawable/ic_baseline_drag_indicator_24"
+                    android:gravity="center"
+                    android:text="Vehicle number"
+                    android:textAlignment="textStart"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    tools:ignore="RtlCompat" />
+
+
+                <TextView
+                    android:id="@+id/tv_phoneno"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.45"
+                    android:gravity="left"
+                    android:text="June 30, 2020 AT 6:00 PM"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+
+            <!--AboutEvent-->
+
+            <!---->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_eve"
+                    android:layout_width="0dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:drawableEnd="@drawable/ic_baseline_drag_indicator_24"
+                    android:gravity="center"
+                    android:text="Travel"
+                    android:textAlignment="textStart"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    tools:ignore="RtlCompat" />
+
+
+                <TextView
+                    android:id="@+id/tv_eve_type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="0.45"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left"
+                    android:text="Planning to conduct a Devotional prticiapte in the occasion"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:drawableRight="@drawable/ic_baseline_drag_indicator_24"
+                    android:gravity="start"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    android:text="Distance"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="visible" />
+
+
+                <TextView
+                    android:id="@+id/tv_addcalndr"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.45"
+                    android:gravity="left"
+                    android:text="Add to Calendar"
+                    android:textColor="#7B5B92"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+            </TableRow>
+
+
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:gravity="start"
+                    android:textColor="#060606"
+                    android:textSize="12sp"
+                    android:text="Money"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="visible"
+                    app:drawableRightCompat="@drawable/ic_baseline_drag_indicator_24" />
+
+
+                <TextView
+                    android:id="@+id/money"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.45"
+                    android:gravity="left"
+                    android:text="Add to Calendar"
+                    android:textColor="#7B5B92"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+            </TableRow>
+
+            <!--Guest-->
+
+
+        </TableLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
