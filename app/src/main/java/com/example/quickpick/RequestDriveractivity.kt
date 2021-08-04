@@ -71,7 +71,6 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     //Routes
     private val compositeDisposable = CompositeDisposable()
     private lateinit var iGoogleApi: IGoogleAPi
-
     private var blackPolyline: Polyline? = null
     private var greyPolyLine: Polyline? = null
     private var polygonOptions: PolylineOptions? = null
@@ -107,7 +106,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
     fun onDeclineMessage(event: DeclineRequestFromDrivers) {
         if (lastDriverCall != null) {
             Commmon.driverfound[lastDriverCall!!.key]!!.isDecline = true
-            findnearbydrivrers(selectedPlaceEvent!!.orgin)
+            findnearbydrivrers(selectedPlaceEvent!!)
 
         }
     }
@@ -191,15 +190,15 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
         )
         Log.e("selec", selectedPlaceEvent!!.orgin.toString())
 
-        addPulsatinEffect(selectedPlaceEvent!!.orgin)
+        addPulsatinEffect(selectedPlaceEvent!!)
 
 
     }
 
-    private fun addPulsatinEffect(orgin: LatLng) {
+    private fun addPulsatinEffect(orgin: SelelectedPlaceEvent) {
 
         if (lastplusAnimato != null) lastplusAnimato!!.cancel()
-        if (lastusercirclr != null) lastusercirclr!!.center = orgin
+        if (lastusercirclr != null) lastusercirclr!!.center = orgin.orgin
         lastplusAnimato =
             Commmon.valueAnimate(duration,
                 ValueAnimator.AnimatorUpdateListener { animation ->
@@ -207,7 +206,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
                         animation!!.animatedValue.toString().toDouble() else {
                         lastusercirclr = mMap.addCircle(
                             CircleOptions()
-                                .center(orgin)
+                                .center(orgin.orgin)
                                 .radius(animation!!.animatedValue.toString().toDouble())
                                 .strokeColor(Color.WHITE)
                                 .fillColor(
@@ -226,12 +225,12 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
 
         Log.e("orgin",orgin.toString())
 
-        startMapCameraSpinningAnimation(mMap.cameraPosition.target)
+        startMapCameraSpinningAnimation(orgin)
 
 
     }
 
-    private fun startMapCameraSpinningAnimation(target: LatLng?) {
+    private fun startMapCameraSpinningAnimation(target: SelelectedPlaceEvent?) {
 
         Log.e("target","targ"+target.toString())
         if (animator != null) animator!!.cancel()
@@ -245,7 +244,7 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
               mMap.moveCamera(
                 CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder()
-                        .target(target)
+                        .target(target?.orgin)
                         .zoom(16f)
                         .tilt(45f)
                         .bearing(nearBearingvalue)
@@ -255,12 +254,12 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
         animator!!.start()
-        findnearbydrivrers(target)
+        findnearbydrivrers(target!!)
 
 
     }
 
-    private fun findnearbydrivrers(target: LatLng?) {
+    private fun findnearbydrivrers(target: SelelectedPlaceEvent) {
 
         Log.e("driver",Commmon.driverfound.toString())
 
@@ -268,12 +267,14 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
             var min = 0f
             var foundriver: DriverModel? = null
             val currentLocation = Location("")
-            currentLocation.latitude = target!!.latitude
-            currentLocation.longitude = target!!.longitude
+            currentLocation.latitude = target!!?.orgin.latitude
+            currentLocation.longitude = target!!?.orgin.longitude
             for (key in Commmon.driverfound.keys) {
                 val driverLocation = Location("")
                 driverLocation.latitude = Commmon.driverfound[key]!!.geolocation!!.latitude
                 driverLocation.longitude = Commmon.driverfound[key]!!.geolocation!!.longitude
+
+
                 if (min == 0f) {
                     min = driverLocation.distanceTo(currentLocation)
                     if (!Commmon.driverfound[key]!!.isDecline) {
@@ -282,7 +283,6 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
                     } else {
                         continue
                     }
-
 
                 } else if (driverLocation.distanceTo(currentLocation) < min) {
                     min = driverLocation.distanceTo(currentLocation)
@@ -297,24 +297,25 @@ class RequestDriveractivity : AppCompatActivity(), OnMapReadyCallback {
 
 
             }
+            Log.e("found driver",foundriver.toString())
+
             if (foundriver != null) {
                 UserUtils.sendRequestToDriver(
                     this,
                     amin_layout,
-                    foundriver, target
+                    foundriver, selectedPlaceEvent!!
                 )
-                lastDriverCall = foundriver
-            }
-            else {
+                lastDriverCall=foundriver
+
+            } else {
                 Toast.makeText(this, getString(R.string.no_driver_accepted), Toast.LENGTH_LONG)
                     .show()
                 lastDriverCall = null
-                //finish()
+                finish()
             }
 
 
         }
-
         else {
             Toast.makeText(this, "" + R.string.driver_notfound, Toast.LENGTH_LONG).show()
             lastDriverCall = null

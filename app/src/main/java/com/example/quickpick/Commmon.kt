@@ -11,6 +11,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import com.example.quickpick.HomeLayoutforDrivers.Previoustripdatamodel
@@ -24,10 +25,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
+import kotlin.math.log
 
 
 object Commmon {
 
+    val DESTINATION_LOCATION_STRING: String="DestinationLocation"
+    val DESTINATION_LOCATION: String="DestinationLocationString"
+    val PICKUP_LOCATION_STRING="PICKUP_LOCATION"
     val DRIVER_KEY: String="DriverKey"
     val REQUEST_DRIVER_DECLINE: String="Decline"
     val RIDER_KEY: String="RiderKey"
@@ -37,6 +42,7 @@ object Commmon {
     val driverSubscribe: MutableMap<String, AnimationModel> = HashMap<String, AnimationModel>()
     val markerlist: MutableMap<String, Marker> = HashMap<String, Marker>()
     val driverfound: MutableMap <String,DriverModel> = HashMap<String,DriverModel>()
+
     val TOKEN_REFERENCE: String = "Token"
     var currentuser: QuickpickdataModel? = null
     var DRIVER_INFO_REFERENCE: String = "Qucikowner";
@@ -51,6 +57,7 @@ object Commmon {
         body: String?,
         intent: Intent?
     ) {
+        Log.d("varutha","varuthu")
         var pendingIntentt: PendingIntent? = null
         if (intent != null) {
             pendingIntentt = PendingIntent.getActivity(
@@ -94,6 +101,11 @@ object Commmon {
                 val notification = builder.build()
                 notificaManager.notify(id, notification)
 
+
+            }
+            else{
+                val notification = builder.build()
+                notificaManager.notify(id, notification)
 
             }
 

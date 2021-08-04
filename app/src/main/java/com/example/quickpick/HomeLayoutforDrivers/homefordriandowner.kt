@@ -96,7 +96,7 @@ class homefordriandowner : AppCompatActivity() {
                         val rating=headerView.findViewById<RelativeLayout>(R.id.invisible)
                         rating.visibility=View.VISIBLE
                         val rr=findViewById<TextView>(R.id.rr)
-                        rr.text= StringBuilder(model?.rating.toString())
+                        rr?.text= StringBuilder(model?.rating.toString())
 
                     }
 

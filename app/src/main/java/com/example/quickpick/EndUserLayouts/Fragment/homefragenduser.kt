@@ -429,7 +429,7 @@ class homefragenduser : Fragment(), OnMapReadyCallback, FirebaseDriverInfoListen
                         groquertry.addGeoQueryEventListener(object : GeoQueryEventListener {
                             override fun onKeyEntered(key: String?, location: GeoLocation?) {
 
-                                if (Commmon.driverfound.containsKey(key))
+                                if (!Commmon.driverfound.containsKey(key))
                                     Commmon.driverfound[key!!] = DriverModel(key, location)
 
                             }

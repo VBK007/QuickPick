@@ -161,4 +161,148 @@
     </androidx.cardview.widget.CardView>
 
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/layout_start_uber"
+        android:visibility="gone"
+        android:layout_gravity="bottom"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="8dp"
+        android:layout_height="wrap_content">
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/ic_baseline_account_circle_24"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/img_start_uber"
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_start_uber_estimate_time"
+                    android:text="1 min"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/uber_move_bold"
+                    android:layout_toStartOf="@+id/img_start_uber"
+                    />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_start_uber_estimate_distance"
+                    android:text="0.5km"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/uber_move_bold"
+                    android:layout_toEndOf="@+id/img_start_uber"
+                    />
+
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_baseline_format_list_bulleted_24"
+                    />
+
+
+
+
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="16dp"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_baseline_perm_phone_msg_24"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_rider_name"
+                    android:text="QUICK PICK"
+                    android:textColor="@android:color/black"
+                    android:textSize="22sp"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="@font/uber_move_bold"
+                    />
+
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/img_three_dots"
+                    android:src="@drawable/ic_baseline_more_vert_24"
+                    />
+
+
+
+            </RelativeLayout>
+
+
+            <com.kusu.loadingbutton.LoadingButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_start_uber"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Start Uber"
+                app:lb_isCircular="false"
+                android:textColor="@color/white"
+                app:lb_buttonColor="@android:color/darker_gray"
+                />
+
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
+
 </FrameLayout>

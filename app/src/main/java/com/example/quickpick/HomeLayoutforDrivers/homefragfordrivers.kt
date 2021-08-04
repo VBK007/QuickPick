@@ -15,12 +15,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
-import android.widget.FrameLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.quickpick.Commmon
 import com.example.quickpick.EndUserLayouts.HomeENdUser
@@ -71,8 +69,9 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
     private lateinit var circularProgressbar: CircularProgressBar
     private lateinit var txt_estimate_time: TextView
     private lateinit var txt_estimate_distance: TextView
-
+//decline
     private var driverRequestReceived: DriverRequestReceived? = null
+
     private val compositeDisposable = CompositeDisposable()
     private lateinit var iGoogleApi: IGoogleAPi
     private var rootlayout: FrameLayout? = null
@@ -84,7 +83,7 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
     private var polylinelist: ArrayList<LatLng?>? = null
 
     private lateinit var mMap: GoogleMap
-    private lateinit var homeviewmodel: HomeENdUser
+    private lateinit var homeviewmodel: homefordriandowner
     private lateinit var mapFragment: SupportMapFragment
 
     private var locatiomRequest: LocationRequest? = null
@@ -95,6 +94,11 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
     private var currentUserRef: DatabaseReference? = null
     private lateinit var driverlocationRef: DatabaseReference
     private lateinit var geoFire: GeoFire
+    lateinit var txt_rating:TextView
+    lateinit var layout_start_uber:CardView
+    lateinit var txt_type_type_uber:TextView
+    lateinit var img_round:ImageView
+
 
     private val onlineValueListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
@@ -109,6 +113,8 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
 
 
     }
+
+
 
     override fun onStart() {
         super.onStart()
@@ -130,7 +136,7 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onDriverRequestReceived(event: DriverRequestReceived) {
-        driverRequestReceived=event
+        driverRequestReceived = event
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -211,8 +217,8 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
                             valueAnimator.start()
                             var orgin = LatLng(location.latitude, location.longitude)
                             val destination = LatLng(
-                                event.pickuplocation.split(",")[0].toDouble(),
-                                event.pickuplocation.split(",")[1].toDouble()
+                                event.pickuplocation!!.split(",")[0].toDouble(),
+                                event.pickuplocation!!.split(",")[1].toDouble()
                             )
                             val latLngBound = LatLngBounds.Builder()
                                 .include(orgin)
@@ -238,29 +244,24 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
                             )
 
 //Display layout
-                            chip_decline.visibility = View.VISIBLE
-                            layout_accept.visibility = View.VISIBLE
 
-                          countDownEvent = Observable.interval(100, TimeUnit.MILLISECONDS)
+                            countDownEvent = Observable.interval(100, TimeUnit.MILLISECONDS)
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .doOnNext { x ->
                                     circularProgressbar.progress += 1f
 
                                 }.takeUntil { along -> along == "100".toLong() }
                                 .doOnComplete {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Fake accept action",
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                                   createtripplan(event,duration,distance)
 
                                 }.subscribe()
 
-
-
-
                             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBound, 160))
                             mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.cameraPosition!!.zoom - 1))
+
+                            chip_decline.visibility = View.VISIBLE
+                            layout_accept.visibility = View.VISIBLE
+
 
 
                         } catch (e: Exception) {
@@ -272,6 +273,38 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
 
 
         }
+
+
+    }
+
+    private fun createtripplan(event: DriverRequestReceived, duration: String, distance: String) {
+        setlayoutprocess(true)
+
+    }
+
+    private fun setlayoutprocess(process: Boolean) {
+        var color  =-1
+        if (process){
+            color =ContextCompat.getColor(requireContext(),R.color.mycolor1)
+            circularProgressbar.indeterminateMode = true
+            txt_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_baseline_stars_24,0)
+
+
+        }
+        else{
+            color =ContextCompat.getColor(requireContext(),R.color.white)
+            circularProgressbar.indeterminateMode = true
+            circularProgressbar.progress=0F
+            txt_rating.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_baseline_star_24,0)
+
+        }
+
+
+
+
+
+
+
 
 
     }
@@ -309,16 +342,17 @@ class homefragfordrivers : Fragment(), OnMapReadyCallback {
         txt_estimate_distance = root!!.findViewById(R.id.txt_estimate_distance) as TextView
         txt_estimate_time = root!!.findViewById(R.id.txt_estimate_time) as TextView
         rootlayout = root!!.findViewById(R.id.root)
+        txt_rating = root!!.findViewById(R.id.txt_rating)
+
         chip_decline.setOnClickListener {
             if (driverRequestReceived != null) {
-
                 if (countDownEvent != null)
                     countDownEvent!!.dispose()
                 chip_decline.visibility = View.GONE
                 layout_accept.visibility = View.GONE
                 mMap.clear()
                 circularProgressbar.progress = 0f
-                UserUtils.sendDeclineRequest(rootlayout!!, activity!!, driverRequestReceived!!.key)
+                UserUtils.sendDeclineRequest(rootlayout!!, activity!!, driverRequestReceived!!.key!!)
                 driverRequestReceived = null
 
             }

@@ -50,13 +50,11 @@ class HomeENdUser : AppCompatActivity() {
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
 
 
-        if (savedInstanceState==null){
-            val fragent=homefragenduser()
-            supportFragmentManager.beginTransaction().replace(R.id.frame,fragent,fragent.javaClass.simpleName).commit()
+        if (savedInstanceState == null) {
+            val fragent = homefragenduser()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame, fragent, fragent.javaClass.simpleName).commit()
         }
-
-
-
 
 
     }
@@ -64,72 +62,72 @@ class HomeENdUser : AppCompatActivity() {
 
     private fun loaduserInfo() {
         var name: String? = null
-        val reference=FirebaseDatabase.getInstance();
+        val reference = FirebaseDatabase.getInstance();
         reference.getReference(Commmon.DRIVER_INFO_REFERENCE)
             .child(FirebaseAuth.getInstance().currentUser?.uid.toString())
-            .addListenerForSingleValueEvent(object :ValueEventListener{
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
 
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    val  model=snapshot.getValue(QuickpickdataModel::class.java)
-if (FirebaseAuth.getInstance().currentUser?.uid.equals(model?.uid)){
-    name=model?.username
-    val navigationView =
-        findViewById<View>(R.id.nav_view) as NavigationView
-    val headerView = navigationView.getHeaderView(0)
-    val username = headerView.findViewById<TextView>(R.id.username)
-    username.text = model?.username
+                    val model = snapshot.getValue(QuickpickdataModel::class.java)
+                    if (FirebaseAuth.getInstance().currentUser?.uid.equals(model?.uid)) {
+                        name = model?.username
+                        val navigationView =
+                            findViewById<View>(R.id.nav_view) as NavigationView
+                        val headerView = navigationView.getHeaderView(0)
+                        val username = headerView.findViewById<TextView>(R.id.username)
+                        username.text = model?.username
 
-    val email=headerView.findViewById<TextView>(R.id.email)
-    email.text = model?.email
-    val phone=headerView.findViewById<TextView>(R.id.phone)
-    phone.text =model?.phonenumber
-
-
-        }
+                        val email = headerView.findViewById<TextView>(R.id.email)
+                        email.text = model?.email
+                        val phone = headerView.findViewById<TextView>(R.id.phone)
+                        phone.text = model?.phonenumber
 
 
-}
+                    }
 
 
-})
+                }
 
+
+            })
 
 
     }
 
     fun upprofile(item: MenuItem) {
-       if (item.itemId==R.id.endprofupdate){
-           Toast.makeText(this, "Click on setting", Toast.LENGTH_SHORT).show()
+        if (item.itemId == R.id.endprofupdate) {
+            Toast.makeText(this, "Click on setting", Toast.LENGTH_SHORT).show()
 
-       }
+        }
     }
 
     fun prevtravel(item: MenuItem) {
-        if (item.itemId==R.id.prevtravel){
+        if (item.itemId == R.id.prevtravel) {
             Toast.makeText(this, "Click on setting", Toast.LENGTH_SHORT).show()
 
         }
     }
 
     fun bookmytravel(item: MenuItem) {
-        if (item.itemId==R.id.booktrave){
+        if (item.itemId == R.id.booktrave) {
             Toast.makeText(this, "Click on setting", Toast.LENGTH_SHORT).show()
 
         }
     }
 
     fun logouti(item: MenuItem) {
-        if (item.itemId==R.id.logout) {
+        if (item.itemId == R.id.logout) {
             val alertDialog = AlertDialog.Builder(this)
             alertDialog.setTitle("Logout")
-            alertDialog.setNegativeButton("Cancel") { dialogInterface,_->dialogInterface.dismiss()
+            alertDialog.setNegativeButton("Cancel") { dialogInterface, _ ->
+                dialogInterface.dismiss()
             }
 
-            alertDialog.setPositiveButton("Sigout") { dialogInterface,_->
+            alertDialog.setPositiveButton("Sigout") { dialogInterface, _ ->
                 FirebaseAuth.getInstance().signOut()
                 val intent = Intent(this, loginactivity::class.java)
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -138,7 +136,7 @@ if (FirebaseAuth.getInstance().currentUser?.uid.equals(model?.uid)){
                 Toast.makeText(this, "Logout Succesfully", Toast.LENGTH_SHORT).show()
             }.setCancelable(false)
 
-val dialog=alertDialog.create()
+            val dialog = alertDialog.create()
             dialog.setOnShowListener {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                     .setTextColor(resources.getColor(android.R.color.holo_red_dark))
@@ -147,7 +145,7 @@ val dialog=alertDialog.create()
 
             }
 
-dialog.show()
+            dialog.show()
 
         }
     }

@@ -80,5 +80,6 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils-v3:2.0.3'
     implementation 'com.google.android.libraries.places:places:2.4.0'
     implementation 'wu.seal.jsontokotlin:library:3.6.1'
+    implementation 'com.github.koushikcse:LoadingButton:1.7'
 
 }

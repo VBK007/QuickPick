@@ -27,27 +27,28 @@ class MyFirebaseMessagingSertives : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+
         val data = remoteMessage.data
         if (data != null) {
             if (data[Commmon.NOTI_TITLE].equals(Commmon.REQUEST_DRIVER_TITLE)) {
+                val driverRequestReceived = DriverRequestReceived()
+                driverRequestReceived.key = data[Commmon.RIDER_KEY]
+                driverRequestReceived.pickuplocation = data[Commmon.PICK_UP_LOCATION]
+                driverRequestReceived.pickupLocationString = data[Commmon.PICKUP_LOCATION_STRING]
+                driverRequestReceived.pickupLocationString =
+                    data[Commmon.DESTINATION_LOCATION_STRING]
+
                 EventBus.getDefault()
                     .postSticky(
-                        DriverRequestReceived(
-                            data[Commmon.RIDER_KEY]!!,
-                            data[Commmon.PICK_UP_LOCATION]!!
-                        )
+                        driverRequestReceived
                     )
 
-            }
-            else if (data[Commmon.NOTI_TITLE]!=null){
-                if (data[Commmon.NOTI_TITLE].equals(Commmon.REQUEST_DRIVER_DECLINE)){
+            } else if (data[Commmon.NOTI_TITLE] != null) {
+                if (data[Commmon.NOTI_TITLE].equals(Commmon.REQUEST_DRIVER_DECLINE)) {
                     EventBus.getDefault().postSticky(DeclineRequestFromDrivers())
                 }
 
-            }
-
-
-            else
+            } else
 
                 Commmon.shownotification(
                     this, Random.nextInt(), data[Commmon.NOTI_TITLE],
